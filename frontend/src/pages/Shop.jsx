@@ -89,6 +89,7 @@ const Shop = () => {
                     else if (cleanParamCat.includes('mix')) cleanParamCat = 'mix';
                     else if (cleanParamCat.includes('malt') || cleanParamCat.includes('abc')) cleanParamCat = 'malt';
                     else if (cleanParamCat.includes('dried') && cleanParamCat.includes('fruit')) cleanParamCat = 'dried fruit';
+                    else if (cleanParamCat.includes('sesame')) cleanParamCat = 'sesame';
 
                     items = items.filter(p => {
                         const pCat = (p.category || '').toLowerCase().replace(/[-\/]/g, ' ').trim();
@@ -100,6 +101,11 @@ const Shop = () => {
                         }
                         if (cleanParamCat === 'mix') {
                             return pCat.includes('mix') || pCat.includes('daily') || pName.includes('mix');
+                        }
+
+                        if (cleanParamCat === 'sesame') {
+                            // Match "White" category (legacy) OR "Sesame" in name/category
+                            return pCat === 'white' || pCat.includes('sesame') || pName.includes('sesame') || pName.includes('white sesame');
                         }
 
                         // General matching: check if normalized URL cat matches product category or name
@@ -165,7 +171,11 @@ const Shop = () => {
                     } else if (combinedName.includes('chia')) {
                         mappedImg = '/pouch_chia_seeds.png';
                     } else if (combinedName.includes('sesame') || combinedName.includes('til')) {
-                        mappedImg = '/pouch_sesame_seeds.png';
+                        if (combinedName.includes('black')) {
+                            mappedImg = '/pouch_sesame_seeds_black.png';
+                        } else {
+                            mappedImg = '/pouch_sesame_seeds.png';
+                        }
                     } else if (combinedName.includes('melon') && combinedName.includes('seed')) {
                         mappedImg = '/pouch_melon_seeds.png';
                     } else if (combinedName.includes('cucumber')) {
@@ -287,6 +297,12 @@ const Shop = () => {
                 description: 'A variety of delicious dried fruits to satisfy your sweet cravings naturally.',
                 bannerTitle: 'Dried Fruits',
                 bannerImage: '/banner_dried_fruits.png'
+            },
+            'sesame': {
+                fullName: 'Premium Sesame Seeds (Til)',
+                description: 'High-quality White Sesame Seeds, perfect for cooking and health benefits.',
+                bannerTitle: 'Sesame Seeds',
+                bannerImage: '/banner_seeds.png'
             }
         };
 
@@ -300,7 +316,8 @@ const Shop = () => {
         else if (key.includes('mix')) key = 'mixes';
         else if (key.includes('malt') || key.includes('abc')) key = 'malt';
         else if (key.includes('fig') || key.includes('anjeer')) key = 'figs';
-        else if (key.includes('seed')) key = 'seeds';
+        else if (key.includes('seed') && !key.includes('sesame')) key = 'seeds';
+        else if (key.includes('sesame') || key.includes('white')) key = 'sesame';
         else if (key.includes('raisin') || key.includes('kishmish')) key = 'raisins';
         else if (key.includes('dried') && key.includes('fruit')) key = 'dried fruits';
 

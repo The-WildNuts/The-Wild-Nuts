@@ -56,26 +56,34 @@ const CategoryShelf = () => {
         'cranberry': { image: '/cranberry.png', color: '#7a1d35' },
         'apricots': { image: '/apricot.png', color: '#f7941d' },
         'apricot': { image: '/apricot.png', color: '#f7941d' },
-        'mixes': { image: '/premium_mixes.png', color: '#a0522d' },
-        'mix': { image: '/premium_mixes.png', color: '#a0522d' },
-        'malt': { image: '/premium_abc_malt.png', color: '#5d2b1a' },
-        'malt/drink': { image: '/premium_abc_malt.png', color: '#5d2b1a' },
-        'seeds': { image: '/banner_seeds.png', color: '#8bc34a' },
-        'seed': { image: '/banner_seeds.png', color: '#8bc34a' },
-        'dried fruits': { image: '/banner_dried_fruits.png', color: '#e67e22' },
-        'dried fruit': { image: '/banner_dried_fruits.png', color: '#e67e22' },
-        'daily mixes': { image: '/pouch_mixes.png', color: '#d35400' },
-        'daily mix': { image: '/pouch_mixes.png', color: '#d35400' },
-        'white': { image: '/pouch_makhana.png', color: '#f5f5f5' }, // Mapping 'White' to Makhana/Foxnuts
+        'mixes': { image: '/card_daily_mix.png', color: '#a0522d' },
+        'mix': { image: '/card_daily_mix.png', color: '#a0522d' },
+        'malt': { image: '/card_malt.png', color: '#5d2b1a' },
+        'malt/drink': { image: '/card_malt.png', color: '#5d2b1a' },
+        'seeds': { image: '/card_seeds.png', color: '#8bc34a' },
+        'seed': { image: '/card_seeds.png', color: '#8bc34a' },
+        'dried fruits': { image: '/card_dried_fruits.png', color: '#e67e22' },
+        'dried fruit': { image: '/card_dried_fruits.png', color: '#e67e22' },
+        'daily mixes': { image: '/card_daily_mix.png', color: '#d35400' },
+        'daily mix': { image: '/card_daily_mix.png', color: '#d35400' },
+        'white': { image: '/pouch_sesame_seeds.png', color: '#f5f5f5' }, // Original backend name
+        'sesame': { image: '/pouch_sesame_seeds.png', color: '#f5f5f5' }, // New display name
         'berries': { image: '/blueberry.png', color: '#3e3e4a' }
       };
 
       if (data && data.length > 0) {
         const enrichedData = data.map(cat => {
-          const key = (cat.name || '').toLowerCase().trim();
+          let name = cat.name;
+          // Rename White to Sesame
+          if (name === 'White') {
+            name = 'Sesame';
+          }
+
+          const key = (name || '').toLowerCase().trim();
           return {
             ...cat,
-            image: imageMap[key]?.image || '/walnut.png',
+            name: name, // Use the renamed name
+            image: imageMap[key]?.image || imageMap[cat.name.toLowerCase()]?.image || '/walnut.png',
             color: imageMap[key]?.color || '#5d2b1a'
           };
         });

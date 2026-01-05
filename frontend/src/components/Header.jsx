@@ -95,8 +95,18 @@ const Header = () => {
           fetchProducts()
         ]);
 
-        if (catData && catData.length > 0) setCategories(catData);
-        else setCategories([]);
+        if (catData && catData.length > 0) {
+          // Rename 'White' to 'Sesame'
+          const mappedCategories = catData.map(cat => {
+            if (cat.name === 'White') {
+              return { ...cat, name: 'Sesame' };
+            }
+            return cat;
+          });
+          setCategories(mappedCategories);
+        } else {
+          setCategories([]);
+        }
 
         if (prodData && prodData.length > 0) setProducts(prodData);
         else setProducts([]);
