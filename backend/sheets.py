@@ -4,14 +4,24 @@ import json
 import os
 
 # Google Sheets Setup
+# Google Sheets Setup
 SHEET_ID = "1Ynl2Z_55tbjIsoGX5rY884tdanb2--TjRGnaKstzQLw"
-# The .env file in the root is actually the credentials JSON
-CREDENTIALS_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".env"))
+# Path to local credentials file
+CREDENTIALS_PATH = os.path.join(os.path.dirname(__file__), "google_credentials.json")
 
 def get_sheets_client():
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    with open(CREDENTIALS_PATH, 'r') as f:
-        creds_dict = json.load(f)
+    
+    # Check for credentials in environment variable (for Render/Vercel)
+    if os.getenv("GOOGLE_CREDENTIALS_JSON"):
+        creds_dict = json.loads(os.getenv("GOOGLE_CREDENTIALS_JSON"))
+    else:
+        # Fallback to local file
+        if not os.path.exists(CREDENTIALS_PATH):
+            raise FileNotFoundError(f"Credentials not found at {CREDENTIALS_PATH} and GOOGLE_CREDENTIALS_JSON not set.")
+        with open(CREDENTIALS_PATH, 'r') as f:
+            creds_dict = json.load(f)
+            
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
     client = gspread.authorize(creds)
     return client

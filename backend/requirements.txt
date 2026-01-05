@@ -4,4 +4,7 @@ gspread
 oauth2client
 python-dotenv
 pydantic
-cors
+email-validator
+PyJWT
+bcrypt
+requests

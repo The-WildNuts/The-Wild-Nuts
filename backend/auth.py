@@ -4,8 +4,9 @@ import secrets
 import datetime
 from typing import Optional, Dict, Any
 
+import os
 # Secret key for JWT - in production, move this to environment variables
-JWT_SECRET = "your-secret-key-change-this-in-production"
+JWT_SECRET = os.getenv("JWT_SECRET", "your-secret-key-change-this-in-production")
 JWT_ALGORITHM = "HS256"
 TOKEN_EXPIRY_HOURS = 24
 
