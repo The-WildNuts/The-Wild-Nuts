@@ -2,6 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
+import { NotificationProvider } from './context/NotificationContext';
 import Header from './components/Header';
 import Navbar from './components/Navbar';
 import AnnouncementBar from './components/AnnouncementBar';
@@ -10,7 +12,6 @@ import CategoryShelf from './components/CategoryShelf';
 import Footer from './components/Footer';
 import Shop from './pages/Shop';
 import ProductDetails from './pages/ProductDetails';
-
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Account from './pages/Account';
@@ -23,7 +24,7 @@ import ProfileSetup from './pages/ProfileSetup';
 import Wishlist from './pages/Wishlist';
 import Cart from './pages/Cart';
 import OrderTracking from './components/OrderTracking';
-import { CartProvider } from './context/CartContext';
+import NotificationShowcase from './pages/NotificationShowcase';
 
 const Home = () => (
     <>
@@ -40,32 +41,35 @@ function App() {
         <Router>
             <AuthProvider>
                 <CartProvider>
-                    <div className="app-container">
-                        <div className="sticky-header-wrapper">
-                            <Header />
-                            <Navbar />
+                    <NotificationProvider>
+                        <div className="app-container">
+                            <div className="sticky-header-wrapper">
+                                <Header />
+                                <Navbar />
+                            </div>
+
+                            <Routes>
+                                <Route path="/" element={<Home />} />
+                                <Route path="/shop/:category?" element={<Shop />} />
+                                <Route path="/product/:id" element={<ProductDetails />} />
+                                <Route path="/login" element={<Login />} />
+                                <Route path="/signup" element={<Signup />} />
+                                <Route path="/profile-setup" element={<ProfileSetup />} />
+                                <Route path="/account" element={<Account />} />
+                                <Route path="/orders" element={<Orders />} />
+                                <Route path="/wishlist" element={<Wishlist />} />
+                                <Route path="/cart" element={<Cart />} />
+                                <Route path="/tracking" element={<OrderTracking />} />
+                                <Route path="/wild-nuts-admin" element={<AdminLogin />} />
+                                <Route path="/wild-nuts-admin/dashboard" element={<AdminDashboard />} />
+                                <Route path="/wild-nuts-admin/orders" element={<AdminOrders />} />
+                                <Route path="/wild-nuts-admin/marketing" element={<AdminMarketing />} />
+                                <Route path="/notification-showcase" element={<NotificationShowcase />} />
+                            </Routes>
+
+                            <Footer />
                         </div>
-
-                        <Routes>
-                            <Route path="/" element={<Home />} />
-                            <Route path="/shop/:category?" element={<Shop />} />
-                            <Route path="/product/:id" element={<ProductDetails />} />
-                            <Route path="/login" element={<Login />} />
-                            <Route path="/signup" element={<Signup />} />
-                            <Route path="/profile-setup" element={<ProfileSetup />} />
-                            <Route path="/account" element={<Account />} />
-                            <Route path="/orders" element={<Orders />} />
-                            <Route path="/wishlist" element={<Wishlist />} />
-                            <Route path="/cart" element={<Cart />} />
-                            <Route path="/tracking" element={<OrderTracking />} />
-                            <Route path="/wild-nuts-admin" element={<AdminLogin />} />
-                            <Route path="/wild-nuts-admin/dashboard" element={<AdminDashboard />} />
-                            <Route path="/wild-nuts-admin/orders" element={<AdminOrders />} />
-                            <Route path="/wild-nuts-admin/marketing" element={<AdminMarketing />} />
-                        </Routes>
-
-                        <Footer />
-                    </div>
+                    </NotificationProvider>
                 </CartProvider>
             </AuthProvider>
         </Router>

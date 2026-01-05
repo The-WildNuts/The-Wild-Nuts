@@ -1,4 +1,5 @@
 :root {
+  /* Original Project Colors */
   --primary-color: #5d2b1a;
   --accent-color: #f7941d;
   --text-dark: #333333;
@@ -9,6 +10,38 @@
   --header-height: 100px;
   --font-main: 'Inter', sans-serif;
   --font-heading: 'Outfit', sans-serif;
+
+  /* Notification System Design Tokens */
+  --ns-primary-green: #1F7A5B;
+  --ns-primary-dark: #145A43;
+  --ns-background: #F8FAF9;
+  --ns-text-primary: #1F2933;
+  --ns-text-secondary: #6B7280;
+  
+  /* Status Colors */
+  --ns-success: #16A34A;
+  --ns-warning: #F59E0B;
+  --ns-error: #DC2626;
+
+  /* Spacing & Radius */
+  --ns-radius: 12px;
+  --ns-spacing-base: 8px; /* Used for 8px grid system */
+}
+
+/* Global Animations */
+@keyframes ns-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes ns-scale-up {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes ns-slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 * {
