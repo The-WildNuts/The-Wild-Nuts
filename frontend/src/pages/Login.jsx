@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowRight, Lock } from 'lucide-react';
+import { ArrowRight, Lock, CheckCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import Modal from '../components/Modal';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -11,6 +12,8 @@ const Login = () => {
     const [otp, setOtp] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [redirectPath, setRedirectPath] = useState('/');
     const { login } = useAuth();
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
@@ -28,12 +31,13 @@ const Login = () => {
                     return;
                 }
 
-                alert('Login Successful!');
+                // alert('Login Successful!');
                 if (!result.profileComplete) {
-                    navigate('/profile-setup');
+                    setRedirectPath('/profile-setup');
                 } else {
-                    navigate('/');
+                    setRedirectPath('/');
                 }
+                setShowSuccessModal(true);
             } else {
                 alert(result.error);
             }
@@ -244,6 +248,41 @@ const Login = () => {
             <p style={{ marginTop: '40px', fontSize: '0.8rem', color: '#888', textAlign: 'center', maxWidth: '350px' }}>
                 By logging in, you accept our <a href="#" style={{ color: '#333' }}>Privacy Policy</a>.
             </p>
+
+            <Modal
+                isOpen={showSuccessModal}
+                onClose={() => {
+                    setShowSuccessModal(false);
+                    navigate(redirectPath);
+                }}
+                title="Welcome Back!"
+                icon={<CheckCircle size={48} color="#4CAF50" />}
+            >
+                <div>
+                    <p style={{ marginBottom: '24px', fontSize: '16px', color: '#555' }}>
+                        Login Successful! We are glad to see you again.
+                    </p>
+                    <button
+                        onClick={() => {
+                            setShowSuccessModal(false);
+                            navigate(redirectPath);
+                        }}
+                        style={{
+                            width: '100%',
+                            padding: '12px',
+                            backgroundColor: '#A8E6A3',
+                            color: '#2e5c33',
+                            border: 'none',
+                            borderRadius: '8px',
+                            fontWeight: '600',
+                            fontSize: '16px',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        Continue Shopping
+                    </button>
+                </div>
+            </Modal>
         </div>
     );
 };
