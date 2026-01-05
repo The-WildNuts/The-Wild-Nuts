@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
-    const API_BASE_URL = 'http://127.0.0.1:8000';
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
     // Check if user is logged in on mount
     useEffect(() => {
@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
     // Fetch user's wishlist
     const fetchWishlist = async (token) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/user/wishlist`, {
+            const response = await fetch(`${API_BASE_URL}/user/wishlist`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }) => {
     // Login function
     const login = async (email, password) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+            const response = await fetch(`${API_BASE_URL}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ identifier: email, password })
@@ -114,7 +114,7 @@ export const AuthProvider = ({ children }) => {
     // Logout function
     const logout = async () => {
         try {
-            await fetch(`${API_BASE_URL}/api/auth/logout`, {
+            await fetch(`${API_BASE_URL}/auth/logout`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${user?.token}`

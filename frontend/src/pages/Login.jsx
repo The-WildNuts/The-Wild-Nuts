@@ -12,6 +12,7 @@ const Login = () => {
     const [newPassword, setNewPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const { login } = useAuth();
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -43,7 +44,7 @@ const Login = () => {
         setLoading(true);
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/auth/forgot-password`, {
+            const response = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: email })
@@ -68,7 +69,7 @@ const Login = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
+            const response = await fetch(`${API_BASE_URL}/auth/reset-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

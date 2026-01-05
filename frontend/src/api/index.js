@@ -33,17 +33,20 @@ export const fetchBrands = async () => {
     }
 };
 
-export const loginUser = async (email) => {
+export const loginUser = async (email, password) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/login`, {
+        const response = await fetch(`${API_BASE_URL}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
+            body: JSON.stringify({ identifier: email, password })
         });
-        if (!response.ok) throw new Error('Login failed');
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'Login failed');
+        }
         return await response.json();
     } catch (error) {
         console.error('Error logging in:', error);
-        return null;
+        return { success: false, error: error.message };
     }
 };
