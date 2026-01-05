@@ -32,8 +32,9 @@ const Toast = ({ message, type = 'success', onClose, duration = 3000 }) => {
     const styles = {
         toast: {
             position: 'fixed',
-            bottom: '24px',
-            right: '24px',
+            top: '24px',
+            left: '50%',
+            transform: 'translateX(-50%)',
             backgroundColor: '#fff',
             color: 'var(--ns-text-primary)',
             padding: '16px',
@@ -45,7 +46,7 @@ const Toast = ({ message, type = 'success', onClose, duration = 3000 }) => {
             minWidth: '300px',
             maxWidth: '400px',
             zIndex: 1000,
-            animation: 'ns-slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+            animation: 'ns-slide-down-center 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
             borderLeft: `4px solid ${getBorderColor()}`,
             fontFamily: 'var(--font-main)',
         },

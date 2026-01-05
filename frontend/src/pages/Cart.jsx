@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Trash2, Plus, Minus, ArrowRight, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import { useNotification } from '../context/NotificationContext';
 import CheckoutModal from '../components/CheckoutModal';
 
 const Cart = () => {
     const navigate = useNavigate();
     const { cart, removeFromCart, updateQuantity, getCartTotal, clearCart } = useCart();
+    const { isAuthenticated } = useAuth();
+    const { showToast } = useNotification();
     const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
     const totalAmount = getCartTotal();
@@ -207,7 +211,14 @@ const Cart = () => {
                     </div>
 
                     <button
-                        onClick={() => setIsCheckoutOpen(true)}
+                        onClick={() => {
+                            if (!isAuthenticated) {
+                                showToast('Please login to place an order', 'warning');
+                                navigate('/login');
+                                return;
+                            }
+                            setIsCheckoutOpen(true);
+                        }}
                         className="checkout-btn"
                     >
                         Place Order via WhatsApp <ArrowRight size={18} />

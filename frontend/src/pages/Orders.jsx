@@ -14,12 +14,8 @@ const Orders = () => {
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
     useEffect(() => {
-        if (!authLoading) {
-            if (!user) {
-                navigate('/login');
-            } else {
-                fetchOrders();
-            }
+        if (!authLoading && user) {
+            fetchOrders();
         }
     }, [authLoading, user]);
 
@@ -49,7 +45,7 @@ const Orders = () => {
         }
     };
 
-    if (authLoading || loading) {
+    if (authLoading || (loading && user)) {
         return (
             <div style={{
                 minHeight: '80vh',
@@ -58,6 +54,45 @@ const Orders = () => {
                 justifyContent: 'center'
             }}>
                 <div style={{ fontSize: '1.2rem', color: '#666' }}>Loading Orders...</div>
+            </div>
+        );
+    }
+
+    if (!user) {
+        return (
+            <div style={{ padding: '40px 20px', maxWidth: '1000px', margin: '0 auto' }}>
+                <h1 style={{ fontSize: '2rem', color: '#333', marginBottom: '30px', borderBottom: '1px solid #eee', paddingBottom: '15px' }}>
+                    My Orders
+                </h1>
+                <div style={{ padding: '50px', textAlign: 'center', backgroundColor: '#fff', borderRadius: '15px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+                    <Package size={64} color="#ccc" />
+                    <h3 style={{ marginTop: '20px', color: '#555' }}>Login to view orders</h3>
+                    <p style={{ color: '#777', marginBottom: '20px' }}>Sign in to track your current orders and view history.</p>
+                    <button
+                        onClick={() => navigate('/login')}
+                        style={{
+                            padding: '12px 30px',
+                            background: '#5d2b1a',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: '25px',
+                            cursor: 'pointer',
+                            fontSize: '1rem',
+                            fontWeight: '600'
+                        }}
+                    >
+                        Login Now
+                    </button>
+                    <div style={{ marginTop: '15px' }}>
+                        <span style={{ color: '#888' }}>New customer? </span>
+                        <span
+                            onClick={() => navigate('/signup')}
+                            style={{ color: '#5d2b1a', fontWeight: '600', cursor: 'pointer', textDecoration: 'underline' }}
+                        >
+                            Create Account
+                        </span>
+                    </div>
+                </div>
             </div>
         );
     }
