@@ -7,12 +7,13 @@ const AdminInventory = () => {
     const [products, setProducts] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
     const fetchProducts = async () => {
         setIsLoading(true);
         try {
             // Using public endpoint for now, ideally an admin specific one
-            const response = await fetch('http://127.0.0.1:8000/api/products');
+            const response = await fetch(`${API_BASE_URL}/products`);
             if (response.ok) {
                 const data = await response.json();
                 setProducts(data);
@@ -38,7 +39,7 @@ const AdminInventory = () => {
                 p.id === id ? { ...p, is_offer: newStatus } : p
             ));
 
-            const response = await fetch(`http://127.0.0.1:8000/api/products/${id}/offer`, {
+            const response = await fetch(`${API_BASE_URL}/products/${id}/offer`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

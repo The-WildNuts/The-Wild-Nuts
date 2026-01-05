@@ -34,12 +34,12 @@ export const CartProvider = ({ children }) => {
     }
     const { user } = auth;
 
-    const API_BASE_URL = 'http://127.0.0.1:8000';
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
     // Fetch cart from backend if logged in
     useEffect(() => {
         if (user && user.token) {
-            fetch(`${API_BASE_URL}/api/user/cart`, {
+            fetch(`${API_BASE_URL}/user/cart`, {
                 headers: { 'Authorization': `Bearer ${user.token}` }
             })
                 .then(res => res.json())
@@ -92,7 +92,7 @@ export const CartProvider = ({ children }) => {
 
         // Log to backend if user is logged in
         if (user && user.token) {
-            fetch(`${API_BASE_URL}/api/user/cart/${product.id}`, {
+            fetch(`${API_BASE_URL}/user/cart/${product.id}`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${user.token}`
@@ -106,7 +106,7 @@ export const CartProvider = ({ children }) => {
 
         // Sync removal with backend
         if (user && user.token) {
-            fetch(`${API_BASE_URL}/api/user/cart/${productId}`, {
+            fetch(`${API_BASE_URL}/user/cart/${productId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${user.token}`

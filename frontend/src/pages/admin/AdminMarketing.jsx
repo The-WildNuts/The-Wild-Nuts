@@ -8,12 +8,13 @@ const AdminMarketing = () => {
     const [content, setContent] = useState('');
     const [isSending, setIsSending] = useState(false);
     const [status, setStatus] = useState(null);
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
     useEffect(() => {
         const fetchSubscribers = async () => {
             const token = localStorage.getItem('adminToken');
             try {
-                const res = await fetch('http://127.0.0.1:8000/api/admin/subscribers', {
+                const res = await fetch(`${API_BASE_URL}/admin/subscribers`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (res.ok) {
@@ -36,7 +37,7 @@ const AdminMarketing = () => {
 
         const token = localStorage.getItem('adminToken');
         try {
-            const res = await fetch('http://127.0.0.1:8000/api/marketing/send', {
+            const res = await fetch(`${API_BASE_URL}/marketing/send`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -17,8 +17,7 @@ const ProfileSetup = () => {
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-
-    const API_BASE_URL = 'http://127.0.0.1:8000';
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
     useEffect(() => {
         if (!authLoading && !user) {
@@ -47,7 +46,7 @@ const ProfileSetup = () => {
         }
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/user/profile`, {
+            const response = await fetch(`${API_BASE_URL}/user/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

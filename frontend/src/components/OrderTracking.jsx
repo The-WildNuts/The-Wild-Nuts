@@ -11,6 +11,7 @@ const OrderTracking = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isCancelled, setIsCancelled] = useState(false);
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
     useEffect(() => {
         if (!orderId) {
@@ -26,7 +27,7 @@ const OrderTracking = () => {
     const fetchOrderStatus = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`http://127.0.0.1:8000/api/orders/${orderId}`);
+            const response = await fetch(`${API_BASE_URL}/orders/${orderId}`);
 
             if (!response.ok) {
                 throw new Error('Order not found');

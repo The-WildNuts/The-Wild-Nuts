@@ -12,6 +12,7 @@ const AdminOrderCatalog = () => {
     const [selectedPeriod, setSelectedPeriod] = useState('today');
     const [editingOrder, setEditingOrder] = useState(null);
     const [isListCollapsed, setIsListCollapsed] = useState(false);
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
     useEffect(() => {
         fetchOrders();
@@ -20,7 +21,7 @@ const AdminOrderCatalog = () => {
     const fetchOrders = async () => {
         const token = localStorage.getItem('adminToken');
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/admin/orders', {
+            const response = await fetch(`${API_BASE_URL}/admin/orders`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.ok) {
@@ -93,7 +94,7 @@ const AdminOrderCatalog = () => {
         const token = localStorage.getItem('adminToken');
 
         try {
-            const response = await fetch(`http://127.0.0.1:8000/api/orders/${orderId}/status`, {
+            const response = await fetch(`${API_BASE_URL}/orders/${orderId}/status`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

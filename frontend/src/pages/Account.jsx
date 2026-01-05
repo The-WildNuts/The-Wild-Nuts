@@ -22,7 +22,7 @@ const Account = () => {
         pincode: ''
     });
 
-    const API_BASE_URL = 'http://127.0.0.1:8000';
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
     useEffect(() => {
         if (!authLoading) {
@@ -44,7 +44,7 @@ const Account = () => {
             setError(null);
 
             // Fetch user profile
-            const profileResponse = await fetch(`${API_BASE_URL}/api/user/profile`, {
+            const profileResponse = await fetch(`${API_BASE_URL}/user/profile`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -114,7 +114,7 @@ const Account = () => {
         const token = localStorage.getItem('authToken');
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/user/profile`, {
+            const response = await fetch(`${API_BASE_URL}/user/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
