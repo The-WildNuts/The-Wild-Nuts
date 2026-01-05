@@ -781,4 +781,7 @@ async def update_profile_api(request: OldUpdateProfileRequest):
     return result
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    port = int(os.environ.get("PORT", 8000))
+    # Reload is useful for dev, but might not be needed in prod. Uvicorn usually handles this via CLI args in prod.
+    # But for running python main.py directly:
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
