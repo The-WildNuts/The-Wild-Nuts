@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
+import { useNotification } from '../context/NotificationContext';
 
 const CheckoutModal = ({ isOpen, onClose, items, total }) => {
     if (!isOpen) return null;
@@ -9,6 +10,7 @@ const CheckoutModal = ({ isOpen, onClose, items, total }) => {
     const { user } = useAuth();
     const { clearCart } = useCart();
     const navigate = useNavigate();
+    const { showToast } = useNotification();
     const [isProcessing, setIsProcessing] = useState(false);
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
@@ -62,11 +64,12 @@ const CheckoutModal = ({ isOpen, onClose, items, total }) => {
             // Navigate to Account page (Orders section) or specialized Tracking page
             // As per request, we should show tracking UI. For now, let's route to a new tracking page.
             onClose();
+            showToast('Order confirmed! Redirecting...', 'success');
             navigate('/tracking', { state: { orderId: orderId, isNew: true } });
 
         } catch (error) {
             console.error("Checkout Error:", error);
-            alert("Something went wrong processing your order. Please try again.");
+            showToast("Something went wrong processing your order. Please try again.", 'error');
         } finally {
             setIsProcessing(false);
         }

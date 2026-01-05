@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { Heart, Trash2, ShoppingCart, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { useNotification } from '../context/NotificationContext';
 import { fetchProducts } from '../api';
 
 const Wishlist = () => {
     const navigate = useNavigate();
     const { wishlist, removeFromWishlist } = useAuth();
     const { addToCart } = useCart();
+    const { showToast } = useNotification();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -192,7 +194,7 @@ const Wishlist = () => {
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         addToCart(product, 1, '250g');
-                                        alert('Added to cart!');
+                                        showToast('Added to cart!', 'success');
                                     }}
                                 >
                                     <ShoppingCart size={18} />

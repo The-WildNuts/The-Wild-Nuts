@@ -4,6 +4,7 @@ import { fetchProducts } from '../api';
 import { Loader2, Plus, Minus, ShoppingCart, Heart, Share2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { useNotification } from '../context/NotificationContext';
 
 const ProductDetails = () => {
     const { id } = useParams();
@@ -18,18 +19,21 @@ const ProductDetails = () => {
     // Wishlist functionality
     const { isInWishlist, addToWishlist, removeFromWishlist, isAuthenticated } = useAuth();
     const { addToCart } = useCart();
+    const { showToast } = useNotification();
 
     const handleWishlistToggle = async () => {
         if (!isAuthenticated) {
-            alert('Please login to save products to your wishlist');
+            showToast('Please login to save products to your wishlist', 'warning');
             navigate('/login');
             return;
         }
 
         if (isInWishlist(id)) {
             await removeFromWishlist(id);
+            showToast('Removed from wishlist', 'info');
         } else {
             await addToWishlist(id);
+            showToast('Added to wishlist', 'success');
         }
     };
 
@@ -287,7 +291,7 @@ const ProductDetails = () => {
                                 className="add-to-cart-btn"
                                 onClick={() => {
                                     addToCart(product, quantity, currentVariant.size);
-                                    alert('Added to cart!');
+                                    showToast('Added to cart!', 'success');
                                 }}
                             >
                                 Add To Cart

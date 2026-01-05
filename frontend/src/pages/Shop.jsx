@@ -3,6 +3,7 @@ import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import { fetchProducts, fetchCategories } from '../api';
 import { Loader2, ShoppingCart, Heart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useNotification } from '../context/NotificationContext';
 
 const Shop = () => {
     const { category } = useParams();
@@ -10,6 +11,7 @@ const Shop = () => {
     const { search } = useLocation();
     const query = new URLSearchParams(search).get('search');
     const { addToCart } = useCart();
+    const { showToast } = useNotification();
 
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -445,7 +447,7 @@ const Shop = () => {
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         addToCart(product, 1, selectedWeight);
-                                                        alert('Added to cart!');
+                                                        showToast('Added to cart!', 'success');
                                                     }}
                                                 >
                                                     ADD TO CART
