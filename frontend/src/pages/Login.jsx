@@ -21,6 +21,13 @@ const Login = () => {
             const result = await login(email, password);
 
             if (result.success) {
+                // Check if it's an admin login
+                if (result.role === 'admin') {
+                    localStorage.setItem('adminToken', result.token);
+                    navigate('/wild-nuts-admin/dashboard');
+                    return;
+                }
+
                 alert('Login Successful!');
                 if (!result.profileComplete) {
                     navigate('/profile-setup');

@@ -12,6 +12,10 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
+# Admin Credentials
+ADMIN_KEY = os.getenv("ADMIN_PASSWORD", "Cantgetme@1") 
+ADMIN_IDENTIFIER = os.getenv("ADMIN_EMAIL", "connectwiththewildnuts@gmail.com")
+
 app = FastAPI(title="The Wild Nuts API")
 
 # CORS configuration
@@ -128,6 +132,24 @@ async def register(request: RegisterRequest):
 @app.post("/api/auth/login")
 async def login(request: LoginRequest):
     """Login with email or username"""
+    
+    # Check for Admin Override
+    if request.identifier == ADMIN_IDENTIFIER and request.password == ADMIN_KEY:
+         token = auth.generate_jwt_token(ADMIN_IDENTIFIER, "admin")
+         return {
+             "success": True,
+             "token": token,
+             "email": ADMIN_IDENTIFIER,
+             "username": "Admin",
+             "role": "admin",
+             "profile_complete": True,
+             "user": {
+                 "email": ADMIN_IDENTIFIER,
+                 "username": "Admin",
+                 "full_name": "Administrator"
+             }
+         }
+
     # Try to find user by email or username
     user = None
     
@@ -241,10 +263,6 @@ async def reset_password(request: ResetPasswordRequest):
 # ============================================
 # Admin Endpoints (Secure Gateway)
 # ============================================
-
-# Load from environment variables
-ADMIN_KEY = os.getenv("ADMIN_PASSWORD", "Cantgetme@1") 
-ADMIN_IDENTIFIER = os.getenv("ADMIN_EMAIL", "connectwiththewildnuts@gmail.com")
 
 class AdminLoginRequest(BaseModel):
     identifier: str
