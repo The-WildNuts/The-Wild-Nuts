@@ -8,6 +8,7 @@ const AdminLogin = () => {
     const [securityKey, setSecurityKey] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
     useEffect(() => {
         const token = localStorage.getItem('adminToken');
@@ -20,7 +21,7 @@ const AdminLogin = () => {
         setError('');
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/admin/login', {
+            const response = await fetch(`${API_BASE_URL}/admin/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ identifier, security_key: securityKey }) // Note: security_key, not securityKey in payload
