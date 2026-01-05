@@ -242,9 +242,9 @@ async def reset_password(request: ResetPasswordRequest):
 # Admin Endpoints (Secure Gateway)
 # ============================================
 
-# In a real scenario, this would be loaded from os.environ
-ADMIN_KEY = "Cantgetme@1" 
-ADMIN_IDENTIFIER = "connectwiththewildnuts@gmail.com"
+# Load from environment variables
+ADMIN_KEY = os.getenv("ADMIN_PASSWORD", "Cantgetme@1") 
+ADMIN_IDENTIFIER = os.getenv("ADMIN_EMAIL", "connectwiththewildnuts@gmail.com")
 
 class AdminLoginRequest(BaseModel):
     identifier: str
