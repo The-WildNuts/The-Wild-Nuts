@@ -245,14 +245,47 @@ const CategoryShelf = () => {
           }
         }
         @media (max-width: 768px) {
-          .category-card {
-            min-width: 200px;
-            height: 240px;
+
+          .shelf-container {
+            padding: 0 15px;
           }
+
+          .shelf-scroll-wrapper {
+            overflow-x: visible; /* remove horizontal scroll */
+          }
+
+          .shelf-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+          }
+
+          .category-card {
+            min-width: 100%;
+            height: 200px;
+          }
+
           .nav-btn {
             display: none;
           }
+
+          .card-title {
+            font-size: 18px;
+          }
+
         }
+        
+        @media (max-width: 480px) {
+          .shelf-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .category-card {
+            height: 180px;
+          }
+        }
+
+
       `}</style>
     </section>
   );
