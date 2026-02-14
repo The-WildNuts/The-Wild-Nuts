@@ -248,6 +248,7 @@ const CategoryShelf = () => {
 
           .shelf-container {
             padding: 0 15px;
+            display: block;
           }
 
           .shelf-scroll-wrapper {
@@ -260,7 +261,7 @@ const CategoryShelf = () => {
             gap: 12px;
           }
 
-          .category-card {
+          .category-card { 
             min-width: 100%;
             height: 200px;
           }
