@@ -4,6 +4,7 @@ import { fetchCategories } from '../api';
 
 const Navbar = () => {
   const [categories, setCategories] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
 
   const iconMap = {
     'Home': '🏠',
@@ -28,11 +29,7 @@ const Navbar = () => {
     const loadCategories = async () => {
       try {
         const data = await fetchCategories();
-        if (data && data.length > 0) {
-          setCategories(data);
-        } else {
-          setCategories([]);
-        }
+        setCategories(data || []);
       } catch (error) {
         console.error("Failed to load categories", error);
       }
@@ -40,140 +37,209 @@ const Navbar = () => {
     loadCategories();
   }, []);
 
-  /* Curated list of categories to display in the header nav to keep it clean */
   const DISPLAY_ORDER = [
     'Almonds', 'Cashews', 'Pistachios', 'Walnuts', 'Dates',
     'Fig', 'Raisins', 'Seeds', 'Berries', 'Dried Fruits',
     'Mixes', 'Daily Mixes', 'Malt', 'Malt/Drink'
   ];
 
-  /* Filter and Sort categories based on DISPLAY_ORDER */
-  const visibleCategories = categories.filter(cat => {
-    const name = (cat.name || '').trim();
-    // Check if this category matches any in our display list (partial or exact match logic if needed, but exact is safer for "White")
-    // We use case-insensitive matching against our allowed list
-    return DISPLAY_ORDER.some(allowed => allowed.toLowerCase() === name.toLowerCase());
-  }).sort((a, b) => {
-    const nameA = (a.name || '').trim().toLowerCase();
-    const nameB = (b.name || '').trim().toLowerCase();
-    const indexA = DISPLAY_ORDER.findIndex(allowed => allowed.toLowerCase() === nameA);
-    const indexB = DISPLAY_ORDER.findIndex(allowed => allowed.toLowerCase() === nameB);
-    // If both found, sort by index. If one not found (shouldn't happen due to filter), put at end.
-    return indexA - indexB;
-  });
+  const visibleCategories = categories
+    .filter(cat => {
+      const name = (cat.name || '').trim();
+      return DISPLAY_ORDER.some(
+        allowed => allowed.toLowerCase() === name.toLowerCase()
+      );
+    })
+    .sort((a, b) => {
+      const nameA = (a.name || '').trim().toLowerCase();
+      const nameB = (b.name || '').trim().toLowerCase();
+      return (
+        DISPLAY_ORDER.findIndex(x => x.toLowerCase() === nameA) -
+        DISPLAY_ORDER.findIndex(x => x.toLowerCase() === nameB)
+      );
+    });
 
   const menuItems = [
     { name: 'Home', icon: iconMap['Home'], path: '/' },
     ...visibleCategories.map(cat => {
       let name = cat.name || 'Category';
       if (name === 'Malt') name = 'Malt/Drink';
-      const safeName = typeof name === 'string' ? name : String(name);
+      const safeName = String(name);
       return {
         name: safeName,
-        icon: iconMap[safeName] || iconMap[safeName.split('/')[0]] || '📦',
-        path: `/shop/${safeName.toLowerCase().replace(/[\s\/]+/g, '-')}`
+        icon:
+          iconMap[safeName] ||
+          iconMap[safeName.split('/')[0]] ||
+          '📦',
+        path: `/shop/${safeName
+          .toLowerCase()
+          .replace(/[\s\/]+/g, '-')}`
       };
     })
   ];
 
   return (
-    <nav className="main-nav">
-      <div className="container">
-        <ul className="nav-list">
-          {menuItems.map((item, index) => (
-            <React.Fragment key={index}>
-              <li className="nav-item">
-                <Link to={item.path}>
-                  {item.icon && <span className="item-icon">{item.icon}</span>}
-                  {item.name}
-                </Link>
-              </li>
-              {index < menuItems.length - 1 && <li className="nav-dot">•</li>}
-            </React.Fragment>
-          ))}
-        </ul>
+    <>
+      {/* DESKTOP NAV */}
+      <nav className="main-nav">
+        <div className="container">
+          <ul className="nav-list">
+            {menuItems.map((item, index) => (
+              <React.Fragment key={index}>
+                <li className="nav-item">
+                  <Link to={item.path}>
+                    {item.icon && (
+                      <span className="item-icon">{item.icon}</span>
+                    )}
+                    {item.name}
+                  </Link>
+                </li>
+                {index < menuItems.length - 1 && (
+                  <li className="nav-dot">•</li>
+                )}
+              </React.Fragment>
+            ))}
+          </ul>
+        </div>
+      </nav>
+
+      {/* MOBILE NAV */}
+      <div className="mobile-nav">
+        <div className="mobile-header">
+          <button
+            className="hamburger"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            ☰
+          </button>
+          <span className="mobile-title">Categories</span>
+        </div>
+
+        {isOpen && (
+          <div className="mobile-menu">
+            {menuItems.map((item, index) => (
+              <Link
+                key={index}
+                to={item.path}
+                onClick={() => setIsOpen(false)}
+              >
+                {item.icon} {item.name}
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
+
+      {/* STYLES */}
       <style jsx>{`
         .main-nav {
           background: #000;
           color: #fff;
-          border-top: 1px solid #333;
         }
+
         .container {
           max-width: 100%;
           margin: 0 auto;
-          padding: 0 15px; /* Use more space */
+          padding: 0 15px;
         }
+
         .nav-list {
           display: flex;
-          flex-wrap: nowrap;
           overflow-x: auto;
-          justify-content: flex-start;
-          align-items: center;
           gap: 15px;
           padding: 15px 5px;
           list-style: none;
           margin: 0;
-          scrollbar-width: none; /* Firefox */
-          -ms-overflow-style: none;  /* IE 10+ */
+          scrollbar-width: none;
         }
-        .nav-list::-webkit-scrollbar { 
-          display: none; /* Chrome/Safari */
+
+        .nav-list::-webkit-scrollbar {
+          display: none;
         }
-        @media (min-width: 1200px) {
-           /* Keep flex-start to ensure all items are visible */
-        }
+
         .nav-item {
+          flex-shrink: 0;
+        }
+
+        .nav-item :global(a) {
           display: flex;
           align-items: center;
-          flex-shrink: 0; /* Prevent shrinking */
-        }
-        .nav-item :global(a) {
-          display: flex !important;
-          flex-direction: row !important;
-          align-items: center !important;
           gap: 8px;
           font-size: 13px;
           font-weight: 600;
           color: #fff;
-          transition: color 0.2s;
           text-transform: uppercase;
           text-decoration: none;
-          white-space: nowrap !important;
+          white-space: nowrap;
         }
+
         .nav-item :global(a:hover) {
           color: #f7941d;
         }
+
         .item-icon {
           font-size: 16px;
-          display: inline-block;
-          margin-right: 5px;
         }
+
         .nav-dot {
-          color: #fff;
-          font-size: 14px;
           opacity: 0.5;
           flex-shrink: 0;
         }
-        @media (max-width: 1200px) {
-          .nav-list {
-            gap: 10px;
-            overflow-x: auto;
-            justify-content: flex-start;
-            padding: 12px 10px;
-          }
-          .nav-item :global(a) {
-            font-size: 12px;
-            white-space: nowrap;
-          }
+
+        /* MOBILE NAV */
+        .mobile-nav {
+          display: none;
+          background: #000;
+          color: #fff;
+          padding: 10px 15px;
         }
+
+        .mobile-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .hamburger {
+          font-size: 22px;
+          background: none;
+          border: none;
+          color: white;
+        }
+
+        .mobile-title {
+          font-weight: 600;
+        }
+
+        .mobile-menu {
+          display: flex;
+          flex-direction: column;
+          margin-top: 10px;
+        }
+
+        .mobile-menu a {
+          padding: 12px 0;
+          text-decoration: none;
+          color: white;
+          border-bottom: 1px solid #333;
+        }
+
+        .mobile-menu a:hover {
+          color: #f7941d;
+        }
+
+        /* RESPONSIVE SWITCH */
         @media (max-width: 768px) {
           .main-nav {
             display: none;
           }
+
+          .mobile-nav {
+            display: block;
+          }
         }
       `}</style>
-    </nav>
+    </>
   );
 };
 
